@@ -8,6 +8,8 @@ public class OpenFileDialog : MonoBehaviour
 {
     [SerializeField] Text PathText;
     [SerializeField] GameObject FileTextPrefab;
+    [SerializeField] List<string> FileFormats;
+    [SerializeField] Book Book;
 
     const string pathStart = @"C:\Users";
     const int itemSize = 40;
@@ -22,12 +24,23 @@ public class OpenFileDialog : MonoBehaviour
     int itemSelectIndex;
     int itemsLength;
     int itemsPage;
+    bool isDialog = true;
+
+    public bool IsDialog { get { return isDialog; } }
+    public FileInfo File { get { return new FileInfo(pathCurr); } }
 
     IEnumerable<string> GetExistingDrives()
     {
         foreach (DriveInfo item in DriveInfo.GetDrives())
             if (Directory.Exists(item.Name))
                 yield return item.Name;
+    }
+
+    bool FormatFilter(string name)
+    {
+        string[] sepArr = name.Split(".");
+        string format = sepArr[sepArr.Length - 1];
+        return FileFormats.Contains(format);
     }
 
     void InitItemsText(List<string> list)
@@ -60,7 +73,8 @@ public class OpenFileDialog : MonoBehaviour
             foreach (var info in dirCur.GetDirectories())
                 items.Add(info.Name);
             foreach (var info in dirCur.GetFiles())
-                items.Add(info.Name);
+                if (FormatFilter(info.Name))
+                    items.Add(info.Name);
             InitItemsText(items);
         } else if (type == ItemType.Drive)
             InitItemsText(drivesList);
@@ -88,12 +102,32 @@ public class OpenFileDialog : MonoBehaviour
         }
     }
 
+    void OpenFile()
+    {
+        isDialog = false;
+        gameObject.SetActive(false);
+        Book.OpenBook(pathCurr.Remove(pathCurr.Length-1));
+    }
+
     public void NextTab()
     {
-        dirList.Add(transform.GetChild(1 + itemSelectIndex).GetComponent<Text>().text);
+        string text = transform.GetChild(1 + itemSelectIndex).GetComponent<Text>().text;
+        dirList.Add(text);
         pathCurr = GetPath();
-        dirCur = new DirectoryInfo(pathCurr);
-        DrawDirItems(ItemType.Directory);
+        if (FormatFilter(text))
+            OpenFile();
+        else
+        {
+            try
+            {
+                dirCur = new DirectoryInfo(pathCurr);
+                DrawDirItems(ItemType.Directory);
+            }
+            catch(Exception e)
+            {
+                PreviousTab();
+            }
+        }
     }
 
     void ChangePage(int newPage)
@@ -154,6 +188,6 @@ public class OpenFileDialog : MonoBehaviour
     void Update()
     {
         PathText.text = pathCurr;
-        transform.GetChild(1 + itemSelectIndex).GetComponent<Text>().color = new Color(0, 200, 0);
+        if (transform.childCount > 1) transform.GetChild(1 + itemSelectIndex).GetComponent<Text>().color = new Color(0, 200, 0);
     }
 }

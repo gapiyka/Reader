@@ -1,0 +1,8 @@
+<linker>
+  <assembly fullname="SautinSoft.Document">
+    <type fullname="SautinSoft.Document.PresentationFramework" preserve="all" />
+    <type fullname="SautinSoft.Document.PresentationCore" preserve="all" />
+    <type fullname="SautinSoft.Document.ReachFramework" preserve="all" />
+  </assembly>
+  <assembly fullname="System.Printing" preserve="nothing"/>
+</linker>
