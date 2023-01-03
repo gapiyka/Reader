@@ -5,7 +5,7 @@ public class Parser
 {
     const int extraOffset = 80;
     const int lineSize = 80;
-    const int pageSize = 16;
+    const int pageSize = 45;
     const string saveFile = @"\CurrentTextBook.txt";
 
     public static List<string> TextToBook(string text)
@@ -47,8 +47,7 @@ public class Parser
                 newPage = "";
             }
         }
-        if (pages.Count == 0)
-            pages.Add(newPage);
+        if (newPage != "") pages.Add(newPage);
 
         return pages;
     }
