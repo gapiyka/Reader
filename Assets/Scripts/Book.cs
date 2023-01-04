@@ -5,13 +5,17 @@ using UnityEngine.UI;
 
 public class Book : MonoBehaviour
 {
-    [SerializeField] Text[] page;
-    [SerializeField] Text[] pageN;
+    [SerializeField] public Text[] Page;
+    [SerializeField] public Text[] PageN;
     Animator animator;
     
     List<string> pages;
     int pagesCount;
     int pageCur;
+
+    public List<string> Pages { get { return pages; } }
+    public int PagesCount { get { return pagesCount; } }
+    public int PageCurrent { get { return pageCur; } }
 
     void Start()
     {
@@ -29,13 +33,13 @@ public class Book : MonoBehaviour
 
     void DrawBookPages() 
     {
-        for (int p = 0; p < pageN.Length; p++)
+        for (int p = 0; p < PageN.Length; p++)
         {
             if (pageCur + p < pagesCount)
-                page[p].text = pages[pageCur + p];
+                Page[p].text = pages[pageCur + p];
             else
-                page[p].text = "";
-            pageN[p].text = (pageCur + (p + 1)).ToString();
+                Page[p].text = "";
+            PageN[p].text = (pageCur + (p + 1)).ToString();
         }
     }
 

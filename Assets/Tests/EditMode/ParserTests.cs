@@ -217,4 +217,64 @@ public class ParserTests
         Assert.AreEqual(list.Count, pagesCount);
         Assert.AreEqual(list[0], resultList[0]);
     }
+
+    [TestCase("file.txt")]
+    [TestCase("file.rtf")]
+    public void FileToTxtFormatsUnitTest(string fileName)
+    {
+        //ARRANGE
+        string text = "some text example\r\nsome text example\r\nsome text example\r\n" +
+            "some text example\r\nsome text example\r\nsome text example\r\n" +
+            "some text example\r\nsome text example\r\nsome text example\r\n" +
+            "some text example\r\n";
+        string filePath = Application.dataPath + @"\Tests\" + fileName;
+
+        //ACT
+        string result = Parser.FileToTxt(filePath);
+        bool fileExist = File.Exists(Application.dataPath + @"\CurrentTextBook.txt");
+
+        //ASSERT
+        Assert.AreEqual(text, result);
+        Assert.True(fileExist);
+    }
+
+    [Test]
+    public void FileToTxtFormatPdfUnitTest()
+    {
+        //ARRANGE
+        string text = "some text example\r\n\r\nsome text example\r\n\r\nsome " +
+            "text example\r\n\r\nsome text example\r\n\r\nsome text example\r\n\r\n" +
+            "some text example\r\n\r\nsome text example\r\n\r\nsome text " +
+            "example\r\n\r\nsome text example\r\n\r\nsome text example\r\n";
+        string fileName = "file.pdf";
+        string filePath = Application.dataPath + @"\Tests\" + fileName;
+
+        //ACT
+        string result = Parser.FileToTxt(filePath);
+        bool fileExist = File.Exists(Application.dataPath + @"\CurrentTextBook.txt");
+
+        //ASSERT
+        Assert.AreEqual(text, result);
+        Assert.True(fileExist);
+    }
+
+
+    [Test]
+    public void FileToTxtExceptionUnitTest()
+    {
+        //ARRANGE
+        if (File.Exists(Application.dataPath + @"\CurrentTextBook.txt"))
+            File.Delete(Application.dataPath + @"\CurrentTextBook.txt");
+        string text = "some text example";
+        string fileName = "unknown.file";
+        string filePath = Application.dataPath + @"\Tests\" + fileName;
+
+        //ACT
+        Action act = () => { string result = Parser.FileToTxt(filePath); };
+        bool fileExist = File.Exists(Application.dataPath + @"\CurrentTextBook.txt");
+
+        //ASSERT
+        Assert.Throws<FileNotFoundException>(() => act());
+        Assert.False(fileExist);
+    }
 }
