@@ -43,3 +43,9 @@ All text printed at 3D model exchanging texture / material.
 ## App Example
 ![ezgif](https://user-images.githubusercontent.com/50524296/210501481-6d8d3c41-5c8f-4adc-97bd-2fc0459f9b09.gif)
 ![turns](https://user-images.githubusercontent.com/50524296/210501515-47ce1363-f9ab-4d79-838e-b0bfa85ea190.gif)
+
+
+## Extra frameworks | APIs
+
+- [IronPDF](https://ironpdf.com/) - for parsing pdf|rtf|docx|html files
+- [Unity Test Framework](https://docs.unity3d.com/Packages/com.unity.test-framework@1.3/manual/index.html) - special tool for creating tests in Edit|Play modes
