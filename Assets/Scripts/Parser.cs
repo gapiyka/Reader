@@ -8,6 +8,31 @@ public class Parser
     const int pageSize = 45;
     const string saveFile = @"\CurrentTextBook.txt";
 
+    static string NewLineForm(string text, int c, ref int charCounter, ref int lineCounter)
+    {
+        string res = "";
+        char prevC = text[c - 1];
+        if (!(prevC == ' ' || prevC == '\n' || prevC == '\t'))
+            res += "-";
+        res += "\n";
+        charCounter = 0;
+        lineCounter++;
+        return res;
+    }
+
+    static bool TrimExtraLines(ref string newPage, string text, int c, ref int charCounter, ref int lineCounter)
+    {
+        if (newPage.Length > 1)
+            if (text[c - 1] == '\n' && text[c - 2] == '\n')
+            {
+                newPage.Remove(newPage.Length - 1);
+                return false;
+            }
+        charCounter = 0;
+        lineCounter++;
+        return true;
+    }
+
     public static List<string> TextToBook(string text)
     {
         string newPage = "";
@@ -21,24 +46,10 @@ public class Parser
         {
             charCounter++;
             if (charCounter == lineSize)
-            {
-                if (!(text[c - 1] == ' ' || text[c - 1] == '\n' || text[c - 1] == '\t'))
-                    newPage += "-";
-                newPage += "\n";
-                charCounter = 0;
-                lineCounter++;
-            }
+                newPage += NewLineForm(text, c, ref charCounter, ref lineCounter);
             if (text[c] == '\n')
-            {
-                if (newPage.Length > 1)
-                    if (text[c - 1] == '\n' && text[c - 2] == '\n')
-                    {
-                        newPage.Remove(newPage.Length - 1);
-                        continue;
-                    }
-                charCounter = 0;
-                lineCounter++;
-            }
+                if(!TrimExtraLines(ref newPage, text, c, ref charCounter, ref lineCounter))
+                    continue; 
             newPage += text[c];
             if (lineCounter == pageSize * pagesCount)
             {

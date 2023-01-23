@@ -12,6 +12,7 @@ public class OpenFileDialog : MonoBehaviour
     [SerializeField] Book Book;
 
     const string pathStart = @"C:\Users";
+    const string separator = "\\";
     const int itemSize = 40;
     const int itemsPerPage = 15;
     const int uiItemOffset = 300;
@@ -38,7 +39,8 @@ public class OpenFileDialog : MonoBehaviour
 
     bool FormatFilter(string name)
     {
-        string[] sepArr = name.Split(".");
+        string foramatSeparator = ".";
+        string[] sepArr = name.Split(foramatSeparator);
         string format = sepArr[sepArr.Length - 1];
         return FileFormats.Contains(format);
     }
@@ -84,7 +86,7 @@ public class OpenFileDialog : MonoBehaviour
     {
         string path = "";
         foreach (string dir in dirList)
-            path += (dir + "\\");
+            path += (dir + separator);
         
         return path;
     }
@@ -94,7 +96,9 @@ public class OpenFileDialog : MonoBehaviour
         dirList.RemoveAt(dirList.Count - 1);
         pathCurr = GetPath();
         if (dirList.Count == 0)
+        {
             DrawDirItems(ItemType.Drive);
+        }
         else
         {
             dirCur = new DirectoryInfo(pathCurr);
@@ -154,7 +158,7 @@ public class OpenFileDialog : MonoBehaviour
         {
             itemPrevIndex = itemSelectIndex;
             itemSelectIndex = itemSelectIndex + offset;
-            transform.GetChild(1 + itemPrevIndex).GetComponent<Text>().color = new Color(255, 255, 255);
+            transform.GetChild(1 + itemPrevIndex).GetComponent<Text>().color = Color.white;
             int iPage = Convert.ToInt32(MathF.Floor(itemSelectIndex / itemsPerPage));
             if (iPage != itemsPage) ChangePage(iPage);
         }
@@ -180,7 +184,7 @@ public class OpenFileDialog : MonoBehaviour
     {
         pathCurr = pathStart;
         dirCur = new DirectoryInfo(pathStart);
-        dirList = new List<string>(pathStart.Split("\\"));
+        dirList = new List<string>(pathStart.Split(separator));
         drivesList = new List<string>(GetExistingDrives());
         DrawDirItems(ItemType.Directory);
     }
@@ -188,6 +192,6 @@ public class OpenFileDialog : MonoBehaviour
     void Update()
     {
         PathText.text = pathCurr;
-        if (transform.childCount > 1) transform.GetChild(1 + itemSelectIndex).GetComponent<Text>().color = new Color(0, 200, 0);
+        if (transform.childCount > 1) transform.GetChild(1 + itemSelectIndex).GetComponent<Text>().color = Color.green;
     }
 }
